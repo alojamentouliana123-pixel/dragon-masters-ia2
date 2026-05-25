@@ -1,5 +1,5 @@
 const GEMINI_API_KEY =
-  "AIzaSyDIFOKgBxxF8TtCr6DpevrJND7yLxsNK4U";
+  "AIzaSyA4X2XLWoQvjX-49B0JkXkzp1kpPwZKRlE";
 
 export async function askAI(prompt) {
 
