@@ -34,10 +34,10 @@ const classes = [
     bonus: { carisma: 2, inteligencia: 1 }
   },
   {
-    id: "bruxo negro",
-    name: "bruxo negro ",
+    id: "bruxo-negro",
+    name: "Bruxo Negro",
     icon: "💀",
-    desc: "Controla sombras, magia proibida.",
+    desc: "Controla sombras e magia proibida.",
     bonus: { inteligencia: 2, mana: 1 }
   },
   {
@@ -48,98 +48,34 @@ const classes = [
     bonus: { defesa: 2, carisma: 1 }
   }
 ];
+
 const classSpells = {
-
   warrior: [
-    {
-      id: "power_slash",
-      name: "Golpe Poderoso",
-      manaCost: 0,
-      damage: 8
-    },
-    {
-      id: "iron_guard",
-      name: "Guarda de Ferro",
-      manaCost: 0,
-      damage: 0
-    }
+    { id: "power_slash", name: "Golpe Poderoso", manaCost: 0, damage: 8 },
+    { id: "iron_guard", name: "Guarda de Ferro", manaCost: 0, damage: 0 }
   ],
-
   mage: [
-    {
-      id: "arcane_bolt",
-      name: "Raio Arcano",
-      manaCost: 5,
-      damage: 10
-    },
-    {
-      id: "magic_barrier",
-      name: "Barreira Mágica",
-      manaCost: 4,
-      damage: 0
-    }
+    { id: "arcane_bolt", name: "Raio Arcano", manaCost: 5, damage: 10 },
+    { id: "magic_barrier", name: "Barreira Mágica", manaCost: 4, damage: 0 }
   ],
-
   ranger: [
-    {
-      id: "precise_shot",
-      name: "Tiro Preciso",
-      manaCost: 0,
-      damage: 9
-    },
-    {
-      id: "hunter_mark",
-      name: "Marca do Caçador",
-      manaCost: 2,
-      damage: 0
-    }
+    { id: "precise_shot", name: "Tiro Preciso", manaCost: 0, damage: 9 },
+    { id: "hunter_mark", name: "Marca do Caçador", manaCost: 2, damage: 0 }
   ],
-
   tamer: [
-    {
-      id: "beast_call",
-      name: "Chamado da Fera",
-      manaCost: 5,
-      damage: 6
-    },
-    {
-      id: "dragon_bond",
-      name: "Vínculo Dracônico",
-      manaCost: 4,
-      damage: 0
-    }
+    { id: "beast_call", name: "Chamado da Fera", manaCost: 5, damage: 6 },
+    { id: "dragon_bond", name: "Vínculo Dracônico", manaCost: 4, damage: 0 }
   ],
-
-  "bruxo negro": [
-    {
-      id: "shadow_bolt",
-      name: "Rajada Sombria",
-      manaCost: 5,
-      damage: 10
-    },
-    {
-      id: "fear_mark",
-      name: "Marca do Medo",
-      manaCost: 4,
-      damage: 3
-    }
+  "bruxo-negro": [
+    { id: "shadow_bolt", name: "Rajada Sombria", manaCost: 5, damage: 10 },
+    { id: "fear_mark", name: "Marca do Medo", manaCost: 4, damage: 3 }
   ],
-
   paladin: [
-    {
-      id: "holy_strike",
-      name: "Golpe Sagrado",
-      manaCost: 4,
-      damage: 9
-    },
-    {
-      id: "minor_heal",
-      name: "Cura Menor",
-      manaCost: 5,
-      damage: 0
-    }
+    { id: "holy_strike", name: "Golpe Sagrado", manaCost: 4, damage: 9 },
+    { id: "minor_heal", name: "Cura Menor", manaCost: 5, damage: 0 }
   ]
 };
+
 const items = [
   { id: "sword", name: "Espada de Ferro", icon: "🗡️", desc: "+2 Força no início" },
   { id: "staff", name: "Cajado Rúnico", icon: "🪄", desc: "+2 Mana no início" },
@@ -173,96 +109,8 @@ const previewBox = document.getElementById("previewBox");
 const statusText = document.getElementById("statusText");
 const characterNameInput = document.getElementById("characterName");
 
-function status(msg){ statusText.textContent = msg; }
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "./index.html";
-    return;
-  }
-
-  currentUser = user;
-  const snap = await getDoc(doc(db, "players", user.uid));
-  if (snap.exists()) accountName = snap.data().accountName || snap.data().name || "Jogador";
-
-  welcomeText.textContent = `Conta: ${accountName}`;
-  characterNameInput.value = localStorage.getItem("characterName") || "";
-  renderAll();
-});
-
-function renderAll() {
-  renderClasses();
-  renderItems();
-  renderAttributes();
-  updatePreview();
-}
-
-function renderClasses() {
-  classGrid.innerHTML = "";
-  classes.forEach(cls => {
-    const div = document.createElement("div");
-    div.className = "option-card" + (selectedClass.id === cls.id ? " selected" : "");
-    div.innerHTML = `
-      <div class="icon">${cls.icon}</div>
-      <strong>${cls.name}</strong>
-      <small>${cls.desc}</small>
-    `;
-    div.addEventListener("click", () => {
-      selectedClass = cls;
-      renderAll();
-    });
-    classGrid.appendChild(div);
-  });
-}
-
-function renderItems() {
-  itemGrid.innerHTML = "";
-  items.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "option-card" + (selectedItem.id === item.id ? " selected" : "");
-    div.innerHTML = `
-      <div class="icon">${item.icon}</div>
-      <strong>${item.name}</strong>
-      <small>${item.desc}</small>
-    `;
-    div.addEventListener("click", () => {
-      selectedItem = item;
-      renderAll();
-    });
-    itemGrid.appendChild(div);
-  });
-}
-
-function renderAttributes() {
-  pointsLeftEl.textContent = pointsLeft;
-  attributesBox.innerHTML = "";
-
-  Object.keys(attributes).forEach(attr => {
-    const row = document.createElement("div");
-    row.className = "attribute-row";
-    row.innerHTML = `
-      <span>${labelAttr(attr)}</span>
-      <button data-action="minus">-</button>
-      <span>${attributes[attr]}</span>
-      <button data-action="plus">+</button>
-    `;
-
-    row.querySelector('[data-action="minus"]').addEventListener("click", () => {
-      if (attributes[attr] <= 1) return;
-      attributes[attr]--;
-      pointsLeft++;
-      renderAll();
-    });
-
-    row.querySelector('[data-action="plus"]').addEventListener("click", () => {
-      if (pointsLeft <= 0) return;
-      attributes[attr]++;
-      pointsLeft--;
-      renderAll();
-    });
-
-    attributesBox.appendChild(row);
-  });
+function status(msg) {
+  statusText.textContent = msg;
 }
 
 function labelAttr(attr) {
@@ -274,15 +122,97 @@ function labelAttr(attr) {
     mana: "Mana",
     carisma: "Carisma"
   };
+
   return labels[attr] || attr;
 }
 
 function getFinalAttributes() {
   const finalAttributes = { ...attributes };
-  Object.entries(selectedClass.bonus).forEach(([key, value]) => {
+
+  Object.entries(selectedClass.bonus || {}).forEach(([key, value]) => {
     finalAttributes[key] = (finalAttributes[key] || 0) + value;
   });
+
   return finalAttributes;
+}
+
+function renderClasses() {
+  classGrid.innerHTML = "";
+
+  classes.forEach(cls => {
+    const div = document.createElement("div");
+    div.className = "option-card" + (selectedClass.id === cls.id ? " selected" : "");
+
+    div.innerHTML = `
+      <div class="icon">${cls.icon}</div>
+      <strong>${cls.name}</strong>
+      <small>${cls.desc}</small>
+    `;
+
+    div.addEventListener("click", () => {
+      selectedClass = cls;
+      renderAll();
+    });
+
+    classGrid.appendChild(div);
+  });
+}
+
+function renderItems() {
+  itemGrid.innerHTML = "";
+
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "option-card" + (selectedItem.id === item.id ? " selected" : "");
+
+    div.innerHTML = `
+      <div class="icon">${item.icon}</div>
+      <strong>${item.name}</strong>
+      <small>${item.desc}</small>
+    `;
+
+    div.addEventListener("click", () => {
+      selectedItem = item;
+      renderAll();
+    });
+
+    itemGrid.appendChild(div);
+  });
+}
+
+function renderAttributes() {
+  pointsLeftEl.textContent = pointsLeft;
+  attributesBox.innerHTML = "";
+
+  Object.keys(attributes).forEach(attr => {
+    const row = document.createElement("div");
+    row.className = "attribute-row";
+
+    row.innerHTML = `
+      <span>${labelAttr(attr)}</span>
+      <button data-action="minus">-</button>
+      <span>${attributes[attr]}</span>
+      <button data-action="plus">+</button>
+    `;
+
+    row.querySelector('[data-action="minus"]').addEventListener("click", () => {
+      if (attributes[attr] <= 1) return;
+
+      attributes[attr]--;
+      pointsLeft++;
+      renderAll();
+    });
+
+    row.querySelector('[data-action="plus"]').addEventListener("click", () => {
+      if (pointsLeft <= 0) return;
+
+      attributes[attr]++;
+      pointsLeft--;
+      renderAll();
+    });
+
+    attributesBox.appendChild(row);
+  });
 }
 
 function updatePreview() {
@@ -292,10 +222,13 @@ function updatePreview() {
   previewBox.innerHTML = `
     <div class="preview-avatar">${selectedClass.icon}</div>
     <div class="preview-title">${name}</div>
+
     <p><strong>Classe:</strong> ${selectedClass.name}</p>
     <p><strong>Item inicial:</strong> ${selectedItem.icon} ${selectedItem.name}</p>
     <p><strong>Conta:</strong> ${accountName}</p>
+
     <div class="divider"></div>
+
     <p><strong>Força:</strong> ${finalAttributes.forca}</p>
     <p><strong>Defesa:</strong> ${finalAttributes.defesa}</p>
     <p><strong>Agilidade:</strong> ${finalAttributes.agilidade}</p>
@@ -305,6 +238,34 @@ function updatePreview() {
   `;
 }
 
+function renderAll() {
+  renderClasses();
+  renderItems();
+  renderAttributes();
+  updatePreview();
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "./index.html";
+    return;
+  }
+
+  currentUser = user;
+
+  const playerSnap = await getDoc(doc(db, "players", user.uid));
+
+  if (playerSnap.exists()) {
+    const data = playerSnap.data();
+    accountName = data.accountName || data.name || "Jogador";
+  }
+
+  welcomeText.textContent = `Conta: ${accountName}`;
+  characterNameInput.value = localStorage.getItem("characterName") || "";
+
+  renderAll();
+});
+
 characterNameInput.addEventListener("input", () => {
   localStorage.setItem("characterName", characterNameInput.value);
   updatePreview();
@@ -312,46 +273,73 @@ characterNameInput.addEventListener("input", () => {
 
 document.getElementById("saveCharacterBtn").addEventListener("click", async () => {
   const name = characterNameInput.value.trim();
+
   if (!name) return status("Digite o nome do personagem.");
   if (pointsLeft > 0) return status(`Distribua todos os pontos. Restam ${pointsLeft}.`);
   if (!currentUser) return status("Usuário não carregado.");
 
+  const finalAttributes = getFinalAttributes();
+
   const character = {
-    
     uid: currentUser.uid,
     accountName,
+
     characterName: name,
+
     classId: selectedClass.id,
     className: selectedClass.name,
     classIcon: selectedClass.icon,
+
     itemId: selectedItem.id,
     itemName: selectedItem.name,
     itemIcon: selectedItem.icon,
-    baseAttributes: attributes,
-    finalAttributes: getFinalAttributes(),
+
+    baseAttributes: { ...attributes },
+    finalAttributes,
+
     level: 1,
     xp: 0,
     gold: 100,
-  hp: 20 + finalAttributes.defesa * 5,
-maxHp: 20 + finalAttributes.defesa * 5,
 
-mana: 10 + finalAttributes.mana * 5,
-maxMana: 10 + finalAttributes.mana * 5,
+    hp: 20 + finalAttributes.defesa * 5,
+    maxHp: 20 + finalAttributes.defesa * 5,
 
-spells: classSpells[selectedClass.id] || [],
+    mana: 10 + finalAttributes.mana * 5,
+    maxMana: 10 + finalAttributes.mana * 5,
 
-subclass: null,
-subclassSpells: [],
+    spells: classSpells[selectedClass.id] || [],
+
+    subclass: null,
+    subclassSpells: [],
+
+    inventory: [],
+
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
   };
 
-  await setDoc(doc(db, "players", currentUser.uid, "characters", "main"), character, { merge: true });
-  await setDoc(doc(db, "players", currentUser.uid), {
-    currentCharacterName: name,
-    currentClassName: selectedClass.name,
-    updatedAt: serverTimestamp()
-  }, { merge: true });
+  try {
+    await setDoc(
+      doc(db, "players", currentUser.uid, "characters", "main"),
+      character,
+      { merge: true }
+    );
 
-  status("Personagem salvo no Firebase!");
+    await setDoc(
+      doc(db, "players", currentUser.uid),
+      {
+        currentCharacterName: name,
+        currentClassName: selectedClass.name,
+        updatedAt: serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    status("Personagem salvo no Firebase!");
+  } catch (error) {
+    console.error(error);
+    status("Erro ao salvar personagem no Firebase.");
+  }
 });
 
 document.getElementById("continueBtn").addEventListener("click", () => {
