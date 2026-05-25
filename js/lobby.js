@@ -278,16 +278,16 @@ function labelAttr(attr) {
 }
 
 function getFinalAttributes() {
-  const finalAttrs = { ...attributes };
+  const finalAttributes = { ...attributes };
   Object.entries(selectedClass.bonus).forEach(([key, value]) => {
-    finalAttrs[key] = (finalAttrs[key] || 0) + value;
+    finalAttributes[key] = (finalAttributes[key] || 0) + value;
   });
-  return finalAttrs;
+  return finalAttributes;
 }
 
 function updatePreview() {
   const name = characterNameInput.value.trim() || "Sem nome";
-  const finalAttrs = getFinalAttributes();
+  const finalAttributes = getFinalAttributes();
 
   previewBox.innerHTML = `
     <div class="preview-avatar">${selectedClass.icon}</div>
@@ -296,12 +296,12 @@ function updatePreview() {
     <p><strong>Item inicial:</strong> ${selectedItem.icon} ${selectedItem.name}</p>
     <p><strong>Conta:</strong> ${accountName}</p>
     <div class="divider"></div>
-    <p><strong>Força:</strong> ${finalAttrs.forca}</p>
-    <p><strong>Defesa:</strong> ${finalAttrs.defesa}</p>
-    <p><strong>Agilidade:</strong> ${finalAttrs.agilidade}</p>
-    <p><strong>Inteligência:</strong> ${finalAttrs.inteligencia}</p>
-    <p><strong>Mana:</strong> ${finalAttrs.mana}</p>
-    <p><strong>Carisma:</strong> ${finalAttrs.carisma}</p>
+    <p><strong>Força:</strong> ${finalAttributes.forca}</p>
+    <p><strong>Defesa:</strong> ${finalAttributes.defesa}</p>
+    <p><strong>Agilidade:</strong> ${finalAttributes.agilidade}</p>
+    <p><strong>Inteligência:</strong> ${finalAttributes.inteligencia}</p>
+    <p><strong>Mana:</strong> ${finalAttributes.mana}</p>
+    <p><strong>Carisma:</strong> ${finalAttributes.carisma}</p>
   `;
 }
 
@@ -332,11 +332,11 @@ document.getElementById("saveCharacterBtn").addEventListener("click", async () =
     level: 1,
     xp: 0,
     gold: 100,
-  hp: 20 + finalAttrs.defesa * 5,
-maxHp: 20 + finalAttrs.defesa * 5,
+  hp: 20 + finalAttributes.defesa * 5,
+maxHp: 20 + finalAttributes.defesa * 5,
 
-mana: 10 + finalAttrs.mana * 5,
-maxMana: 10 + finalAttrs.mana * 5,
+mana: 10 + finalAttributes.mana * 5,
+maxMana: 10 + finalAttributes.mana * 5,
 
 spells: classSpells[selectedClass.id] || [],
 
