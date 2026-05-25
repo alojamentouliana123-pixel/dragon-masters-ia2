@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌍 Eldrakar</title>
+  <link rel="stylesheet" href="./css/style.css"/>
+</head>
+<body>
+
+<header class="world-header">
+  <h1>🌍 Eldrakar</h1>
+  <p id="turnInfo">Aguardando turno...</p>
+</header>
+
+<main class="world-container">
+
+  <!-- PERSONAGEM -->
+  <aside class="world-left card">
+
+    <h2>👤 Personagem</h2>
+
+    <div id="playerCard" class="player-card">
+      Carregando personagem...
+    </div>
+
+    <h2>🎒 Inventário</h2>
+
+    <div id="inventoryBox" class="inventory-box">
+      Vazio...
+    </div>
+
+  </aside>
+
+  <!-- CENTRO -->
+  <section class="world-center card">
+
+   <h2>📍 Localização Atual</h2>
+
+<div class="location-box">
+
+  <div class="location-coords">
+    <span id="currentLocation">
+      H35
+    </span>
+
+    →
+    
+    <span id="targetLocation">
+      S35
+    </span>
+  </div>
+
+  <div id="locationEnvironment" class="location-environment">
+    Uma névoa cobre a estrada antiga.
+    O vento sopra entre árvores gigantes.
+  </div>
+
+</div>
+    <h2>📜 Narrativa</h2>
+
+<div id="storyLog" class="story-log">
+  <div class="story-message master">
+    O mundo de Eldrakar desperta...
+  </div>
+</div>
+
+<div class="master-chat-box">
+  <input id="masterInput" placeholder="Pergunte ou fale com o mestre..." />
+  <button id="sendMasterBtn">Falar com Mestre</button>
+</div>
+
+    <div class="dice-box">
+      🎲 Último dado:
+      <span id="diceResult">-</span>
+    </div>
+
+  </section>
+
+  <!-- DIREITA -->
+  <aside class="world-right card">
+
+    <h2>⚔️ Ações</h2>
+
+    <div class="action-list">
+
+      <button class="action-btn" data-action="move">
+        🚶 Mover
+      </button>
+
+      <button class="action-btn" data-action="observe">
+        👁️ Observar
+      </button>
+
+      <button class="action-btn" data-action="talk">
+         🪄 Usar Magia
+      </button>
+
+      <button class="action-btn" data-action="attack">
+        ⚔️ Atacar
+      </button>
+
+      <button class="action-btn" data-action="item">
+        🧪 Usar Item
+      </button>
+
+      <button class="action-btn" data-action="defend">
+        🛡️ Defender
+      </button>
+
+    </div>
+
+    <h2>💬 Chat Global</h2>
+
+    <div id="chatBox" class="chat-box"></div>
+
+    <div class="chat-send">
+      <input id="chatInput" placeholder="Fale com o mundo..." />
+      <button id="sendChatBtn">Enviar</button>
+    </div>
+
+  </aside>
+
+</main>
+
+<script type="module" src="./js/world.js"></script>
+
+</body>
+</html>

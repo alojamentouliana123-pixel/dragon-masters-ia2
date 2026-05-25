@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dragon Masters IA - Criar Personagem</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🐉 Dragon Masters IA</h1>
+    <p id="welcomeText">Criador de personagem</p>
+  </header>
+  <section id="introScreen" class="intro-screen">
+  <div class="intro-box">
+    <h1>🌌 O Chamado dos Dragões</h1>
+    <p>
+      Você acorda em um vazio escuro.  
+      Uma voz antiga ecoa dentro da sua alma:
+    </p>
+
+    <p class="intro-voice">
+      “Escolhido... seu mundo acabou para você.  
+      Mas em Eldrakar, sua segunda vida começa agora.”
+    </p>
+
+    <p>
+      Diante de você, seis caminhos aparecem em chamas, sombras e luz.
+      Cada escolha moldará seu destino.
+    </p>
+
+    <button id="startCreationBtn" class="rainbow-btn">
+      ✨ entra no mundo 
+    </button>
+  </div>
+</section>
+
+  <main class="creator-layout">
+    <section class="card">
+      <h2>👤 Seu personagem</h2>
+
+      <label>Nome do personagem</label>
+      <input id="characterName" placeholder="Ex: Arkan, Lyra, Draven..." />
+
+      <h2>⚔️ Escolha sua classe</h2>
+      <div id="classGrid" class="class-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>💪 Pontos de atributo</h2>
+      <p class="hint">Você tem <strong id="pointsLeft">10</strong> pontos para distribuir.</p>
+
+      <div id="attributesBox"></div>
+
+      <h2>🎒 Item inicial</h2>
+      <div id="itemGrid" class="item-grid"></div>
+    </section>
+
+    <section class="card preview-card">
+      <h2>📜 Prévia</h2>
+      <div id="previewBox" class="preview-box"></div>
+
+      <button id="saveCharacterBtn">Salvar personagem no Firebase</button>
+      <button id="continueBtn" class="secondary-btn">Continuar para salas</button>
+      <button id="logoutBtn" class="danger-btn">Sair</button>
+
+      <p id="statusText" class="status"></p>
+    </section>
+  </main>
+
+  <script type="module" src="./js/lobby.js"></script>
+</body>
+</html>

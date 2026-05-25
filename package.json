@@ -1,0 +1,16 @@
+{
+  "name": "dragon-masters-lobby-personagem",
+  "version": "1.0.0",
+  "description": "Lobby com criação de personagem para Dragon Masters IA",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^12.1.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.6"
+  }
+}
