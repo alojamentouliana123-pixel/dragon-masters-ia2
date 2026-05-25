@@ -34,10 +34,7 @@ async function savePlayer(user, chosenName = "") {
   const charSnap = await getDoc(charRef);
 
   if (charSnap.exists()) {
-    window.location.href = "./world.html";
-  } else {
-    window.location.href = "./lobby.html";
-  }
+   window.location.href = "./world.html";
 }
 
 getRedirectResult(auth)
