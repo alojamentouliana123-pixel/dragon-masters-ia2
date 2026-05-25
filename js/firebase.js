@@ -1,17 +1,16 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
-  browserPopupRedirectResolver,
   signInAnonymously,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut
-} from "firebase/auth";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
   getFirestore,
@@ -24,29 +23,27 @@ import {
   setDoc,
   getDoc,
   serverTimestamp
-} from "firebase/firestore";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCnF8pj6U_WZOtHtpAQ9Re3iIrghjxLvoQ",
-  authDomain: "rpg-dragons.firebaseapp.com",
-  projectId: "rpg-dragons",
-  storageBucket: "rpg-dragons.firebasestorage.app",
-  messagingSenderId: "845426392745",
-  appId: "1:845426392745:web:708d8878cb2b2f67ac73b8",
+  apiKey: "SUA_API",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_ID",
+  storageBucket: "SEU_BUCKET",
+  messagingSenderId: "SEU_SENDER",
+  appId: "SEU_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
-auth.useDeviceLanguage();
-
-auth.settings = {
-  popupRedirectResolver: browserPopupRedirectResolver
-};
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
 export {
+  auth,
+  db,
+  googleProvider,
   signInWithRedirect,
   getRedirectResult,
   signInAnonymously,
@@ -54,13 +51,11 @@ export {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-
   collection,
   addDoc,
   onSnapshot,
   query,
   orderBy,
-
   doc,
   setDoc,
   getDoc,
