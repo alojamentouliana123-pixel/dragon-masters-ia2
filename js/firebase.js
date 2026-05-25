@@ -47,8 +47,6 @@ export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
 export {
-  getRedirectResult,
-browserPopupRedirectResolver,
   signInWithRedirect,
   getRedirectResult,
   signInAnonymously,
@@ -68,4 +66,3 @@ browserPopupRedirectResolver,
   getDoc,
   serverTimestamp
 };
-  
