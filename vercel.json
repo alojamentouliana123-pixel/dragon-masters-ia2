@@ -1,5 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/lobby.html" }
-  ]
+  "outputDirectory": "."
 }
