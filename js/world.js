@@ -441,43 +441,11 @@ MONSTRO_APARECEU: nome do monstro
   await saveMemory(action, aiText);
 }
 
-if (!user) {
-  console.log("SEM LOGIN — MODO TESTE");
-  
-  currentUser = {
-    uid: "modo-teste"
-  };
-
-  character = {
-    characterName: "Herói Teste",
-    className: "Guerreiro",
-    classIcon: "⚔️",
-    level: 1,
-    xp: 0,
-    gold: 100,
-    hp: 30,
-    maxHp: 30,
-    mana: 20,
-    maxMana: 20,
-
-    finalAttributes: {
-      forca: 5,
-      defesa: 5,
-      agilidade: 5,
-      inteligencia: 5,
-      mana: 5,
-      carisma: 5
-    },
-
-    inventory: [],
-    spells: []
-  };
-
-  renderCharacter();
-  addStory("master", "Modo teste ativado.");
-  
-  return;
-}
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "./index.html";
+    return;
+  }
 
   currentUser = user;
 
@@ -498,7 +466,7 @@ if (!user) {
   await loadMemory();
 
   addStory("master", generatePlayerStory(character));
-
+});
 
 document.querySelectorAll(".action-btn").forEach((btn) => {
   btn.addEventListener("click", async () => {
