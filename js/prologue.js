@@ -16,14 +16,9 @@ const prologueState = {
   location: "Pântano Sombrio",
 
   scene: `
-Você desperta sozinho
-em um pântano escuro.
+
 
 A CHUVA cai lentamente.
-
-O cheiro de lama
-e podridão invade o ar.
-
 Algo observa você
 na escuridão.
 `
