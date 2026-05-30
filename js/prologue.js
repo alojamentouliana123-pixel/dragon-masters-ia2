@@ -29,13 +29,42 @@ na escuridão.
 `
 };
 
-function typeText(text) {
-  if (!storyText) return Promise.resolve();
+async function falarNarrativaIA(texto) {
+  try {
+    const response = await fetch("/api/voice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ texto })
+    });
 
-  storyText.innerHTML =
-    String(text || "").replace(/\n/g, "<br>");
+    if (!response.ok) {
+      console.error("Erro voz IA:", await response.text());
+      return;
+    }
 
-  return Promise.resolve();
+    const blob = await response.blob();
+    const audioUrl = URL.createObjectURL(blob);
+    const audio = new Audio(audioUrl);
+
+    audio.play();
+
+  } catch (error) {
+    console.error("Erro ao tocar voz:", error);
+  }
+}
+async function typeText(text) {
+  if (!storyText) return;
+
+  storyText.innerHTML = "";
+
+  const texto = String(text || "");
+
+  for (let i = 0; i < texto.length; i++) {
+    storyText.innerHTML += texto[i] === "\n" ? "<br>" : texto[i];
+    await new Promise(r => setTimeout(r, 15));
+  }
 }
 
 function detectEffects(text) {
@@ -296,14 +325,15 @@ async function startGame() {
   detectEffects(prologueState.scene);
 
   GameBrain.init(character, {
-    onNarrativaGerada: async texto => {
-      detectEffects(texto);
+onNarrativaGerada: async texto => {
+  detectEffects(texto);
 
-      await typeText(texto);
+  falarNarrativaIA(texto);
+  await typeText(texto);
 
-      syncMonsterUI();
-      updateActionButtons();
-    },
+  syncMonsterUI();
+  updateActionButtons();
+},
 
     onStatusUpdate: async charAtualizado => {
       character = charAtualizado;
