@@ -386,30 +386,20 @@ Voltou para exploração.`;
         }
       }
 
+    if (!narrativaFinal) {
+  narrativaFinal = criarNarrativaSistema({
+    action: tipoAcao,
+    report: relatorioMecanico,
+    state: this.estadoAtual,
+    encounter: this.encontroAtivo,
+    character: this.character,
+    turn: this.turnoAtual
+  });
+}
+
       this.turnoAtual++;
 
-      if (!narrativaFinal) {
-        narrativaFinal = criarNarrativaSistema({
-          action: tipoAcao,
-          report: relatorioMecanico,
-          state: this.estadoAtual,
-          encounter: this.encontroAtivo,
-          character: this.character,
-          turn: this.turnoAtual
-        });
-      } else {
-        narrativaFinal += `
-
-${criarNarrativaSistema({
-          action: tipoAcao,
-          report: relatorioMecanico,
-          state: this.estadoAtual,
-          encounter: this.encontroAtivo,
-          character: this.character,
-          turn: this.turnoAtual
-        })}`;
-      }
-
+    
       this.scene = narrativaFinal;
 
       if (this.onNarrativaGerada) {
