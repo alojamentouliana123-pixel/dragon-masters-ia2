@@ -30,19 +30,18 @@ na escuridão.
 };
 
 async function falarNarrativaIA(texto) {
-  try {
-    const response = await fetch("/api/voice", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ texto })
-    });
+  if (!("speechSynthesis" in window)) return;
 
-    if (!response.ok) {
-      console.error("Erro voz IA:", await response.text());
-      return;
-    }
+  speechSynthesis.cancel();
+
+  const fala = new SpeechSynthesisUtterance(texto);
+  fala.lang = "pt-BR";
+  fala.rate = 0.85;
+  fala.pitch = 0.8;
+  fala.volume = 1;
+
+  speechSynthesis.speak(fala);
+}
 
     const blob = await response.blob();
     const audioUrl = URL.createObjectURL(blob);
