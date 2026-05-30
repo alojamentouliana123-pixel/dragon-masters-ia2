@@ -2,7 +2,7 @@ let POTIONS = [];
 let MONSTERS_DATA = [];
 
 async function carregarDados() {
-  const potionsResponse = await fetch("../../assets/data/potions.json");
+  const potionsResponse = await fetch("../../assets/data/potion.json");
   POTIONS = await potionsResponse.json();
 
   const monstersResponse = await fetch("../../assets/data/monstros_com_loot.json");
