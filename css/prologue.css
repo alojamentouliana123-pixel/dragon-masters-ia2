@@ -427,4 +427,22 @@ body {
 .story-line.hide {
   opacity: 0;
   transform: translateY(-12px);
+}#storyText {
+  transition: opacity 0.8s ease;
+}
+
+.story-fade-in {
+  animation: storyFadeIn 0.8s ease forwards;
+}
+
+@keyframes storyFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
