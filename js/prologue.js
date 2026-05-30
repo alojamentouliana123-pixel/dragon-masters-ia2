@@ -24,9 +24,9 @@ na escuridão.
 `
 };
 
-async function typeText(text) {
-  if (!storyText) return;
-
+function typeText(text) {
+    storyText.innerHTML = text;
+}
   isTyping = true;
   storyText.innerHTML = "";
 
