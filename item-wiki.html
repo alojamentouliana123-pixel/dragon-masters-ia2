@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Wiki de Itens</title>
+
+<style>
+body{
+    background:#090909;
+    color:#eee;
+    font-family:Arial,sans-serif;
+    padding:20px;
+}
+
+h1{
+    color:#facc15;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:10px;
+}
+
+.item{
+    border:2px solid #333;
+    border-radius:10px;
+    padding:10px;
+    text-align:center;
+    min-height:150px;
+    overflow:hidden;
+}
+
+.item img{
+    width:48px;
+    height:48px;
+    image-rendering:pixelated;
+}
+
+.item strong{
+    display:block;
+    margin-top:5px;
+    font-size:12px;
+}
+
+.item small{
+    display:block;
+    font-size:11px;
+    color:#999;
+}
+
+#busca{
+    width:300px;
+    padding:8px;
+    margin-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📚 Wiki de Itens</h1>
+
+<input
+    id="busca"
+    placeholder="Buscar item..."
+>
+
+<div id="total"></div>
+<br>
+
+<div id="wiki" class="grid"></div>
+
+<script type="module">
+
+import { getItemVisual } from "./js/item-icons.js";
+
+const resposta =
+    await fetch("./assets/data/wiki.json");
+const todosItens = await resposta.json();
+
+const tiposBloqueados = [
+  "pocao_hp",
+  "pocao_mn",
+  "consumivel",
+  "comida",
+  "fruta",
+  "erva"
+];
+
+const itens = todosItens.filter(item =>
+  item.tipo &&
+  !tiposBloqueados.includes(String(item.tipo).toLowerCase())
+);
+
+const wiki =
+    document.getElementById("wiki");
+
+const busca =
+    document.getElementById("busca");
+
+document.getElementById("total").innerHTML =
+    `<b>${itens.length}</b> itens carregados`;
+
+function render(lista){
+
+    wiki.innerHTML = lista.map(item => {z
+
+        const visual =
+            getItemVisual(item);
+
+        return `
+        <div
+            class="item"
+            style="
+                border-color:${visual.borderColor};
+                background:${visual.background};
+            "
+        >
+
+            <img
+                src="${visual.image}"
+                onerror="this.style.opacity=.2"
+            >
+
+            <strong>${item.nome}</strong>
+
+            <small>
+                ${item.tipo}
+            </small>
+
+            <small>
+                ${item.tier}
+            </small>
+
+            <small>
+                ${item.id}
+            </small>
+
+        </div>
+        `;
+    }).join("");
+
+}
+
+render(itens);
+
+busca.addEventListener("input",()=>{
+
+    const texto =
+        busca.value.toLowerCase();
+
+    const filtrados =
+        itens.filter(item =>
+            String(item.nome || "")
+            .toLowerCase()
+            .includes(texto)
+        );
+
+    render(filtrados);
+
+});
+
+
+</script>
+
+</body>
+</html>

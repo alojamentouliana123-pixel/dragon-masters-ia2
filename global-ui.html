@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Masters - Neo City</title>
+    <style>
+        /* Fundo Cinematográfico e Escuro */
+        body {
+            background-color: #0a0b10;
+            color: #e0e6ed;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            /* Um degradê de luz no fundo para dar clima de cinema */
+            background: radial-gradient(circle at center, #1a1c29 0%, #050608 100%);
+        }
+
+        h1 {
+            font-size: 24px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #00f0ff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            margin-bottom: 20px;
+        }
+
+        /* Container Principal do RPG de Mesa */
+        .tabletop-container {
+            width: 800px;
+            height: 550px;
+            background: rgba(16, 18, 27, 0.75);
+            border: 2px solid #222638;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* MAPA INTERATIVO CINEMATOGRÁFICO */
+        .cyber-map {
+            flex: 1;
+            position: relative;
+            /* Substitua pelo link de uma arte conceitual futurista/cyberpunk se preferir */
+            background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1000'); 
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid #222638;
+        }
+
+        /* Overlay escuro para dar o tom realista e destacar os neons */
+        .map-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(10,11,16,0.3) 0%, rgba(10,11,16,0.7) 100%);
+            z-index: 1;
+        }
+
+        /* Estruturas e Prédios Interativos (Estilo Holograma/Neon) */
+        .district-node {
+            position: absolute;
+            z-index: 2;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(10, 11, 16, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Efeito ao passar o mouse: Brilho Cibernético Realista */
+        .district-node:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-color);
+            box-shadow: 0 0 20px var(--neon-glow);
+        }
+
+        /* Ícones simbólicos das construções (Simulando hologramas de mesa de RPG) */
+        .node-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .node-name {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Posições e Cores Customizadas de cada Distrito */
+        #node-tech-center {
+            left: 80px; top: 120px;
+            --neon-color: #00f0ff;
+            --neon-glow: rgba(0, 240, 255, 0.4);
+        }
+        #node-tech-center .node-icon { background-image: url('https://img.icons8.com/neon/96/hospital.png'); }
+
+        #node-black-market {
+            right: 100px; top: 100px;
+            --neon-color: #ff0055;
+            --neon-glow: rgba(255, 0, 85, 0.4);
+        }
+        #node-black-market .node-icon { background-image: url('https://img.icons8.com/neon/96/shopping-cart.png'); }
+
+        #node-arena {
+            left: 330px; top: 220px;
+            --neon-color: #ffaa00;
+            --neon-glow: rgba(255, 170, 0, 0.4);
+        }
+        #node-arena .node-icon { background-image: url('https://img.icons8.com/neon/96/swords.png'); }
+
+        /* Zona de Saída (Fronteira da Rota 1) */
+        .wilderness-gate {
+            position: absolute;
+            top: 20px; left: 350px; z-index: 2;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed #666;
+            color: #aaa;
+            border-radius: 20px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wilderness-gate:hover {
+            border-color: #00ff66;
+            color: #00ff66;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+        }
+
+        /* TERMINAL DE DIÁLOGO DO MESTRE DO JOGO */
+        .log-terminal {
+            height: 120px;
+            background: #07080c;
+            border-top: 2px solid #222638;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .terminal-header {
+            font-size: 10px;
+            color: #525f7a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .terminal-text {
+            font-size: 15px;
+            color: #cdd7e5;
+            line-height: 1.5;
+        }
+        
+        .terminal-text strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Neo-District: Overcore</h1>
+
+    <div class="tabletop-container">
+        <!-- O Mapa Futurista com os Hologramas Clicáveis -->
+        <div class="cyber-map">
+            <div class="map-overlay"></div>
+
+            <!-- Portão de Saída para o Ermo (Grama Alta/Rota) -->
+            <div class="wilderness-gate" onclick="ativarDistrito('externo')">➔ SAÍDA: SETOR EXTERNO</div>
+
+            <!-- Centro de Regeneração (Centro Pokémon) -->
+            <div id="node-tech-center" class="district-node" onclick="ativarDistrito('med')">
+                <div class="node-icon"></div>
+                <div class="node-name" style="color: #00f0ff;">Med-Bay Centro</div>
+            </div>
+
+            <!-- Mercado Negro (Poké-Mart) -->
+            <div id="node-black-market" class="district-node" onclick="ativarDistrito('shop')">
+                <div class="node-icon"></div>
+                <div class="node-name" style="color: #ff0055;">Mercado Negro</div>
+            </div>
+
+            <!-- Arena de Combate de Números -->
+            <div id="node-arena" class="district-node" onclick="ativarDistrito('colosseum')">
+                <div class="node-icon"></div>
+                <div class="node-name" style="color: #ffaa00;">Arena de Dados</div>
+            </div>
+        </div>
+
+        <!-- Terminal de Logs do Sistema / Diálogo do Mestre -->
+        <div class="log-terminal">
+            <div class="terminal-header">[ SYSTEM LOG / GAME MASTER ]</div>
+            <div class="terminal-text" id="log-display">
+                Sistemas operacionais online. Você está no painel tático da cidade. Selecione um nó de destino para interagir.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica de áudio ou efeitos pode ser adicionada aqui
+        function ativarDistrito(tipo) {
+            const display = document.getElementById('log-display');
+            
+            // Efeito de digitação ou atualização instantânea cinematográfica
+            switch(tipo) {
+                case 'med':
+                    display.innerHTML = "Acessando <strong style='color: #00f0ff;'>Med-Bay Centro</strong>... Injetando nanorobôs de reparo. A integridade estrutural e os dados dos seus NÚMEROS foram completamente restaurados.";
+                    break;
+                case 'shop':
+                    display.innerHTML = "Conexão criptografada estabelecida com <strong style='color: #ff0055;'>Mercado Negro</strong>. Contrabandista: 'Procurando chips de aprimoramento ou modificadores elementares? Tenho mercadoria nova.'";
+                    break;
+                case 'colosseum':
+                    display.innerHTML = "Sinal de desafio detectado na <strong style='color: #ffaa00;'>Arena de Dados</strong>. Inicializando matriz de combate 1v1. Carregando dados táticos do oponente...";
+                    break;
+                case 'externo':
+                    display.innerHTML = "Alerta: Você está prestes a romper o perímetro urbano rumo ao <strong style='color: #00ff66;'>Setor Externo</strong>. Probabilidade de encontrar anomalias numéricas selvagens de alto nível: 87%. Continuar?";
+                    break;
+                default:
+                    display.innerHTML = "Aguardando comandos no mapa tático.";
+            }
+        }
+    </script>
+
+</body>
+</html>
