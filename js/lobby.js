@@ -4,105 +4,149 @@ import {
   doc, setDoc, getDoc, serverTimestamp
 } from "./firebase.js";
 
-const classes = [
+import { GAME_SKILLS } from "./regras/skills.js";
+
+const PRIMARY_CLASSES = [
   {
-    id: "warrior",
+    id: "warrior_dragon",
     name: "Guerreiro Dracônico",
     icon: "⚔️",
-    desc: "Forte, resistente e bom na linha de frente.",
-    bonus: { forca: 2, defesa: 1 }
+    role: "Tanque / Dano físico",
+    description: "Forte, resistente e feito para lutar na linha de frente.",
+    stats: {
+      hp: 140,
+      mana: 40,
+      strength: 14,
+      defense: 12,
+      agility: 6,
+      intelligence: 4,
+      weight: 8,
+      luck: 2,
+      speed: 4
+    }
   },
   {
-    id: "mage",
+    id: "runic_mage",
     name: "Mago Rúnico",
     icon: "🔮",
-    desc: "Usa magia, runas antigas e poder elemental.",
-    bonus: { inteligencia: 2, mana: 1 }
+    role: "Magia / Controle",
+    description: "Usa runas, mana e magia ancestral.",
+    stats: {
+      hp: 70,
+      mana: 180,
+      strength: 2,
+      defense: 4,
+      agility: 6,
+      intelligence: 18,
+      weight: 3,
+      luck: 5,
+      speed: 5
+    }
   },
   {
-    id: "ranger",
+    id: "archer",
     name: "Arqueiro",
     icon: "🏹",
-    desc: "Ataca de longe, tem agilidade e precisão.",
-    bonus: { agilidade: 2, forca: 1 }
+    role: "Distância / Crítico",
+    description: "Rápido, preciso e mortal de longe.",
+    stats: {
+      hp: 95,
+      mana: 70,
+      strength: 8,
+      defense: 5,
+      agility: 16,
+      intelligence: 6,
+      weight: 5,
+      luck: 8,
+      speed: 8
+    }
   },
   {
-    id: "tamer",
+    id: "dragon_tamer",
     name: "Domador de Dragões",
     icon: "🐉",
-    desc: "Cria ligação forte com dragões e criaturas.",
-    bonus: { carisma: 2, inteligencia: 1 }
+    role: "Pet / Companheiro",
+    description: "Cria vínculo com feras, dragões e criaturas.",
+    stats: {
+      hp: 110,
+      mana: 100,
+      strength: 7,
+      defense: 7,
+      agility: 7,
+      intelligence: 10,
+      weight: 5,
+      luck: 7,
+      speed: 6
+    }
   },
   {
-    id: "bruxo-negro",
+    id: "dark_warlock",
     name: "Bruxo Negro",
     icon: "💀",
-    desc: "Controla sombras e magia proibida.",
-    bonus: { inteligencia: 2, mana: 1 }
+    role: "Sombra / Dreno",
+    description: "Usa maldições, sombras e magia proibida.",
+    stats: {
+      hp: 85,
+      mana: 150,
+      strength: 4,
+      defense: 5,
+      agility: 7,
+      intelligence: 16,
+      weight: 3,
+      luck: 6,
+      speed: 5
+    }
   },
   {
     id: "paladin",
     name: "Paladino",
     icon: "🛡️",
-    desc: "Defensor sagrado com cura e proteção.",
-    bonus: { defesa: 2, carisma: 1 }
+    role: "Cura / Defesa",
+    description: "Defensor sagrado com cura e proteção.",
+    stats: {
+      hp: 125,
+      mana: 110,
+      strength: 9,
+      defense: 13,
+      agility: 4,
+      intelligence: 9,
+      weight: 7,
+      luck: 4,
+      speed: 4
+    }
   }
 ];
 
-const classSpells = {
-  warrior: [
-    { id: "power_slash", name: "Golpe Poderoso", manaCost: 0, damage: 8 },
-    { id: "iron_guard", name: "Guarda de Ferro", manaCost: 0, damage: 0 }
-  ],
-  mage: [
-    { id: "arcane_bolt", name: "Raio Arcano", manaCost: 5, damage: 10 },
-    { id: "magic_barrier", name: "Barreira Mágica", manaCost: 4, damage: 0 }
-  ],
-  ranger: [
-    { id: "precise_shot", name: "Tiro Preciso", manaCost: 0, damage: 9 },
-    { id: "hunter_mark", name: "Marca do Caçador", manaCost: 2, damage: 0 }
-  ],
-  tamer: [
-    { id: "beast_call", name: "Chamado da Fera", manaCost: 5, damage: 6 },
-    { id: "dragon_bond", name: "Vínculo Dracônico", manaCost: 4, damage: 0 }
-  ],
-  "bruxo-negro": [
-    { id: "shadow_bolt", name: "Rajada Sombria", manaCost: 5, damage: 10 },
-    { id: "fear_mark", name: "Marca do Medo", manaCost: 4, damage: 3 }
-  ],
-  paladin: [
-    { id: "holy_strike", name: "Golpe Sagrado", manaCost: 4, damage: 9 },
-    { id: "minor_heal", name: "Cura Menor", manaCost: 5, damage: 0 }
-  ]
+const ATTRIBUTE_LABELS = {
+  strength: "Força",
+  defense: "Defesa",
+  agility: "Agilidade",
+  intelligence: "Inteligência",
+  weight: "Peso",
+  luck: "Sorte",
+  speed: "Velocidade"
 };
 
-const items = [
-  { id: "sword", name: "Espada de Ferro", icon: "🗡️", desc: "+2 Força no início" },
-  { id: "staff", name: "Cajado Rúnico", icon: "🪄", desc: "+2 Mana no início" },
-  { id: "bow", name: "Arco de Caçador", icon: "🏹", desc: "+2 Agilidade no início" },
-  { id: "egg", name: "Ovo Misterioso", icon: "🥚", desc: "Pode chocar um dragão raro" },
-  { id: "potion", name: "Poção Grande", icon: "🧪", desc: "Cura emergencial" },
-  { id: "shield", name: "Escudo Antigo", icon: "🛡️", desc: "+2 Defesa no início" }
-];
-
-const attributes = {
-  forca: 1,
-  defesa: 1,
-  agilidade: 1,
-  inteligencia: 1,
-  mana: 1,
-  carisma: 1
+const baseAttributes = {
+  strength: 1,
+  defense: 1,
+  agility: 1,
+  intelligence: 1,
+  weight: 1,
+  luck: 1,
+  speed: 1
 };
 
-let pointsLeft = 10;
-let selectedClass = classes[0];
-let selectedItem = items[0];
+let attributes = { ...baseAttributes };
+let pointsLeft = 20;
+let selectedClass = PRIMARY_CLASSES[0];
+let selectedSkill = null;
 let currentUser = null;
 let accountName = "Jogador";
 
 const welcomeText = document.getElementById("welcomeText");
 const classGrid = document.getElementById("classGrid");
-const itemGrid = document.getElementById("itemGrid");
+const skillGrid = document.getElementById("skillGrid");
 const attributesBox = document.getElementById("attributesBox");
 const pointsLeftEl = document.getElementById("pointsLeft");
 const previewBox = document.getElementById("previewBox");
@@ -114,43 +158,73 @@ function status(msg) {
 }
 
 function labelAttr(attr) {
-  const labels = {
-    forca: "Força",
-    defesa: "Defesa",
-    agilidade: "Agilidade",
-    inteligencia: "Inteligência",
-    mana: "Mana",
-    carisma: "Carisma"
-  };
+  return ATTRIBUTE_LABELS[attr] || attr;
+}
 
-  return labels[attr] || attr;
+function getInitialSkillsForClass(classId) {
+  return GAME_SKILLS.filter(skill =>
+    skill.usableBy?.includes("hero") &&
+    !skill.monsterOnly &&
+    skill.classId === classId &&
+    !skill.subclassId &&
+    !skill.thirdClass &&
+    (skill.minLevel || 1) <= 5
+  );
+}
+
+function ensureSelectedSkill() {
+  const skills = getInitialSkillsForClass(selectedClass.id);
+
+  if (!skills.length) {
+    selectedSkill = null;
+    return;
+  }
+
+  if (!selectedSkill || selectedSkill.classId !== selectedClass.id) {
+    selectedSkill = skills[0];
+  }
 }
 
 function getFinalAttributes() {
-  const finalAttributes = { ...attributes };
+  const classStats = selectedClass.stats;
 
-  Object.entries(selectedClass.bonus || {}).forEach(([key, value]) => {
-    finalAttributes[key] = (finalAttributes[key] || 0) + value;
-  });
+  return {
+    hp: classStats.hp + attributes.defense * 5 + attributes.strength * 2,
+    mana: classStats.mana + attributes.intelligence * 5,
 
-  return finalAttributes;
+    strength: classStats.strength + attributes.strength,
+    defense: classStats.defense + attributes.defense,
+    agility: classStats.agility + attributes.agility,
+    intelligence: classStats.intelligence + attributes.intelligence,
+
+    weight: classStats.weight + attributes.weight,
+    luck: classStats.luck + attributes.luck,
+    speed: classStats.speed + attributes.speed,
+
+    maxWeight: 30 + (classStats.weight + attributes.weight) * 5,
+    criticalChance: 3 + (classStats.luck + attributes.luck),
+    dodgeChance: 2 + Math.floor((classStats.speed + attributes.speed) / 2)
+  };
 }
 
 function renderClasses() {
   classGrid.innerHTML = "";
 
-  classes.forEach(cls => {
+  PRIMARY_CLASSES.forEach(cls => {
     const div = document.createElement("div");
     div.className = "option-card" + (selectedClass.id === cls.id ? " selected" : "");
 
     div.innerHTML = `
       <div class="icon">${cls.icon}</div>
       <strong>${cls.name}</strong>
-      <small>${cls.desc}</small>
+      <small>${cls.role}</small>
+      <small>${cls.description}</small>
     `;
 
     div.addEventListener("click", () => {
       selectedClass = cls;
+      selectedSkill = null;
+      ensureSelectedSkill();
       renderAll();
     });
 
@@ -158,25 +232,33 @@ function renderClasses() {
   });
 }
 
-function renderItems() {
-  itemGrid.innerHTML = "";
+function renderSkills() {
+  skillGrid.innerHTML = "";
 
-  items.forEach(item => {
+  const skills = getInitialSkillsForClass(selectedClass.id);
+
+  if (!skills.length) {
+    skillGrid.innerHTML = "<p>Essa classe ainda não tem magia inicial.</p>";
+    return;
+  }
+
+  skills.forEach(skill => {
     const div = document.createElement("div");
-    div.className = "option-card" + (selectedItem.id === item.id ? " selected" : "");
+    div.className = "option-card" + (selectedSkill?.id === skill.id ? " selected" : "");
 
     div.innerHTML = `
-      <div class="icon">${item.icon}</div>
-      <strong>${item.name}</strong>
-      <small>${item.desc}</small>
+      <div class="icon">${skill.icon || "✨"}</div>
+      <strong>${skill.name}</strong>
+      <small>Tipo: ${skill.type} | Mana: ${skill.manaCost || 0}</small>
+      <small>${skill.description || ""}</small>
     `;
 
     div.addEventListener("click", () => {
-      selectedItem = item;
+      selectedSkill = skill;
       renderAll();
     });
 
-    itemGrid.appendChild(div);
+    skillGrid.appendChild(div);
   });
 }
 
@@ -197,7 +279,6 @@ function renderAttributes() {
 
     row.querySelector('[data-action="minus"]').addEventListener("click", () => {
       if (attributes[attr] <= 1) return;
-
       attributes[attr]--;
       pointsLeft++;
       renderAll();
@@ -205,7 +286,6 @@ function renderAttributes() {
 
     row.querySelector('[data-action="plus"]').addEventListener("click", () => {
       if (pointsLeft <= 0) return;
-
       attributes[attr]++;
       pointsLeft--;
       renderAll();
@@ -217,32 +297,180 @@ function renderAttributes() {
 
 function updatePreview() {
   const name = characterNameInput.value.trim() || "Sem nome";
-  const finalAttributes = getFinalAttributes();
+  const stats = getFinalAttributes();
 
   previewBox.innerHTML = `
     <div class="preview-avatar">${selectedClass.icon}</div>
     <div class="preview-title">${name}</div>
 
     <p><strong>Classe:</strong> ${selectedClass.name}</p>
-    <p><strong>Item inicial:</strong> ${selectedItem.icon} ${selectedItem.name}</p>
-    <p><strong>Conta:</strong> ${accountName}</p>
+    <p><strong>Função:</strong> ${selectedClass.role}</p>
+    <p><strong>Magia inicial:</strong> ${selectedSkill ? `${selectedSkill.icon} ${selectedSkill.name}` : "Nenhuma"}</p>
 
     <div class="divider"></div>
 
-    <p><strong>Força:</strong> ${finalAttributes.forca}</p>
-    <p><strong>Defesa:</strong> ${finalAttributes.defesa}</p>
-    <p><strong>Agilidade:</strong> ${finalAttributes.agilidade}</p>
-    <p><strong>Inteligência:</strong> ${finalAttributes.inteligencia}</p>
-    <p><strong>Mana:</strong> ${finalAttributes.mana}</p>
-    <p><strong>Carisma:</strong> ${finalAttributes.carisma}</p>
+    <p><strong>HP:</strong> ${stats.hp}</p>
+    <p><strong>Mana:</strong> ${stats.mana}</p>
+    <p><strong>Força:</strong> ${stats.strength}</p>
+    <p><strong>Defesa:</strong> ${stats.defense}</p>
+    <p><strong>Agilidade:</strong> ${stats.agility}</p>
+    <p><strong>Inteligência:</strong> ${stats.intelligence}</p>
+    <p><strong>Peso:</strong> ${stats.weight}</p>
+    <p><strong>Sorte:</strong> ${stats.luck}</p>
+    <p><strong>Velocidade:</strong> ${stats.speed}</p>
+
+    <div class="divider"></div>
+
+    <p><strong>Peso máximo:</strong> ${stats.maxWeight}</p>
+    <p><strong>Crítico:</strong> ${stats.criticalChance}%</p>
+    <p><strong>Esquiva:</strong> ${stats.dodgeChance}%</p>
   `;
 }
 
 function renderAll() {
+  ensureSelectedSkill();
   renderClasses();
-  renderItems();
+  renderSkills();
   renderAttributes();
   updatePreview();
+}
+
+function createStarterLootFallback() {
+  return [
+    {
+      id: "starter_small_bag",
+      nome: "Bolsa Pequena",
+      tipo: "mochila",
+      tier: "T1",
+      slotsBonus: 20,
+      pesoMax: 50,
+      peso: 1,
+      valor: 50,
+      stackavel: false,
+      quantidade: 1,
+      descricao: "Uma bolsa simples para novos aventureiros."
+    },
+    {
+      id: "small_hp_potion",
+      nome: "Poção Pequena de Vida",
+      tipo: "pocao_hp",
+      tier: "T1",
+      cura: 50,
+      peso: 0.2,
+      valor: 25,
+      stackavel: true,
+      quantidade: 5,
+      descricao: "Recupera uma pequena quantidade de vida."
+    },
+    {
+      id: "small_mana_potion",
+      nome: "Poção Pequena de Mana",
+      tipo: "pocao_mn",
+      tier: "T1",
+      mana: 40,
+      peso: 0.2,
+      valor: 25,
+      stackavel: true,
+      quantidade: 5,
+      descricao: "Recupera uma pequena quantidade de mana."
+    }
+  ];
+}
+
+function createNewCharacter() {
+  const name = characterNameInput.value.trim();
+  const stats = getFinalAttributes();
+  const starterLoot = createStarterLootFallback();
+
+  return {
+    uid: currentUser.uid,
+    accountName,
+
+    characterName: name,
+    name,
+
+    classStage: 1,
+    classId: selectedClass.id,
+    className: selectedClass.name,
+    classIcon: selectedClass.icon,
+    classRole: selectedClass.role,
+
+    subclassId: null,
+    subclassName: null,
+    thirdClass: null,
+
+    baseAttributes: {
+  strength: attributes.strength,
+  defense: attributes.defense,
+  agility: attributes.agility,
+  intelligence: attributes.intelligence,
+  weight: attributes.weight,
+  luck: attributes.luck,
+  speed: attributes.speed
+},
+
+finalAttributes: stats,
+
+attributes: {
+  fisico: stats.strength,
+  defesa: stats.defense,
+  agilidade: stats.agility,
+  inteligencia: stats.intelligence,
+  vitalidade: Math.floor(stats.hp / 10)
+},
+
+    level: 1,
+    xp: 0,
+    gold: 100,
+
+    hp: stats.hp,
+    maxHp: stats.hp,
+    mana: stats.mana,
+    maxMana: stats.mana,
+
+    weight: stats.weight,
+    maxWeight: stats.maxWeight,
+    luck: stats.luck,
+    speed: stats.speed,
+
+    criticalChance: stats.criticalChance,
+    dodgeChance: stats.dodgeChance,
+
+    starterSkill: selectedSkill ? selectedSkill.id : null,
+    skills: selectedSkill ? [selectedSkill.id] : [],
+
+    equipment: {
+      weapon: null,
+      armor: null,
+      helmet: null,
+      boots: null,
+      cape: null,
+      shield: null,
+      ring: null,
+      necklace: null
+    },
+
+    inventory: starterLoot,
+    starterLootReceived: true,
+
+    bankAccountOpened: false,
+    bank: null,
+
+    reputation: {},
+    completedQuests: [],
+    unlockedQuests: ["main_world_survive"],
+    activeQuests: [],
+
+    location: "Prólogo",
+    currentMap: "world",
+
+    globalTurn: 1,
+    personalTurn: 0,
+    status: "active",
+
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  };
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -276,47 +504,11 @@ document.getElementById("saveCharacterBtn").addEventListener("click", async () =
 
   if (!name) return status("Digite o nome do personagem.");
   if (pointsLeft > 0) return status(`Distribua todos os pontos. Restam ${pointsLeft}.`);
+  if (!selectedClass) return status("Escolha uma classe.");
+  if (!selectedSkill) return status("Escolha uma magia inicial.");
   if (!currentUser) return status("Usuário não carregado.");
 
-  const finalAttributes = getFinalAttributes();
-
-  const character = {
-    uid: currentUser.uid,
-    accountName,
-
-    characterName: name,
-
-    classId: selectedClass.id,
-    className: selectedClass.name,
-    classIcon: selectedClass.icon,
-
-    itemId: selectedItem.id,
-    itemName: selectedItem.name,
-    itemIcon: selectedItem.icon,
-
-    baseAttributes: { ...attributes },
-    finalAttributes,
-
-    level: 1,
-    xp: 0,
-    gold: 100,
-
-    hp: 20 + finalAttributes.defesa * 5,
-    maxHp: 20 + finalAttributes.defesa * 5,
-
-    mana: 10 + finalAttributes.mana * 5,
-    maxMana: 10 + finalAttributes.mana * 5,
-
-    spells: classSpells[selectedClass.id] || [],
-
-    subclass: null,
-    subclassSpells: [],
-
-    inventory: [],
-
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
-  };
+  const character = createNewCharacter();
 
   try {
     await setDoc(
@@ -329,16 +521,17 @@ document.getElementById("saveCharacterBtn").addEventListener("click", async () =
       doc(db, "players", currentUser.uid),
       {
         currentCharacterName: name,
-        currentClassName: selectedClass.name,
+        currentClassName: character.className,
+        currentClassId: character.classId,
         updatedAt: serverTimestamp()
       },
       { merge: true }
     );
 
-    status("Personagem salvo no Firebase!");
+    status("Personagem salvo!");
   } catch (error) {
     console.error(error);
-    status("Erro ao salvar personagem no Firebase.");
+    status("Erro ao salvar personagem.");
   }
 });
 

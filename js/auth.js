@@ -12,106 +12,146 @@ const passwordInput = document.getElementById("passwordInput");
 const guestNameInput = document.getElementById("guestName");
 
 function status(msg) {
-  statusText.textContent = msg;
+  if (statusText) statusText.textContent = msg;
 }
 
-async function savePlayer(user, chosenName = "") {
-  const name = chosenName || user.displayName || user.email || "Jogador";
+async function savePlayer(user, chosenName = "", options = {}) {
+  const { forceLobby = false } = options;
 
-  await setDoc(doc(db, "players", user.uid), {
-    uid: user.uid,
-    accountName: name,
-    email: user.email || "",
-    photoURL: user.photoURL || "",
-    provider: user.providerData[0]?.providerId || "anonymous",
-    updatedAt: serverTimestamp()
-  }, { merge: true });
+  const name =
+    chosenName ||
+    user.displayName ||
+    user.email?.split("@")[0] ||
+    "Jogador";
 
-  localStorage.setItem("playerUid", user.uid);
-  localStorage.setItem("accountName", name);
+  try {
+    await setDoc(doc(db, "players", user.uid), {
+      uid: user.uid,
+      accountName: name,
+      email: user.email || "",
+      photoURL: user.photoURL || "",
+      provider: user.providerData[0]?.providerId || "anonymous",
+      updatedAt: serverTimestamp()
+    }, { merge: true });
 
-  const charRef = doc(db, "players", user.uid, "characters", "main");
-  const charSnap = await getDoc(charRef);
+    localStorage.setItem("playerUid", user.uid);
+    localStorage.setItem("accountName", name);
 
-  if (charSnap.exists()) {
-    window.location.href = "./world.html";
-  } else {
-    window.location.href = "./lobby.html";
+    if (forceLobby) {
+      window.location.href = "./lobby.html";
+      return;
+    }
+
+    const charRef = doc(db, "players", user.uid, "characters", "main");
+    const charSnap = await getDoc(charRef);
+
+    if (charSnap.exists()) {
+      window.location.href = "./world.html";
+    } else {
+      window.location.href = "./lobby.html";
+    }
+
+  } catch (error) {
+    console.error("Erro ao salvar dados do jogador:", error);
+    status("Erro ao carregar o seu perfil.");
   }
 }
 
 getRedirectResult(auth)
   .then(async (result) => {
     if (result?.user) {
+      status("Conectado com Google! Carregando...");
       await savePlayer(result.user);
     }
   })
   .catch((error) => {
-    console.error(error);
-    status("Erro ao finalizar login Google.");
+    console.error("Erro no retorno do Google:", error);
+    status("Erro ao autenticar com o Google.");
   });
 
-document.getElementById("googleLoginBtn").addEventListener("click", async () => {
-  try {
-    status("Entrando com Google...");
-    await signInWithRedirect(auth, googleProvider);
-  } catch (error) {
-    console.error(error);
-    status("Erro no Google.");
-  }
-});
+const googleLoginBtn = document.getElementById("googleLoginBtn");
+if (googleLoginBtn) {
+  googleLoginBtn.addEventListener("click", () => {
+    status("Redirecionando para o Google...");
+    signInWithRedirect(auth, googleProvider);
+  });
+}
 
-document.getElementById("emailRegisterBtn").addEventListener("click", async () => {
-  const name = playerNameInput.value.trim();
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+const emailRegisterBtn = document.getElementById("emailRegisterBtn");
+if (emailRegisterBtn) {
+  emailRegisterBtn.addEventListener("click", async () => {
+    const name = playerNameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-  if (!name || !email || !password) {
-    return status("Preencha nome, email e senha.");
-  }
+    if (!name || !email || !password) {
+      return status("Preencha nome, email e senha para cadastrar.");
+    }
 
-  try {
-    status("Criando conta...");
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    await savePlayer(result.user, name);
-  } catch (error) {
-    console.error(error);
-    status("Erro ao cadastrar. Senha precisa ter mínimo 6 caracteres.");
-  }
-});
+    try {
+      status("Criando conta...");
+      const result = await createUserWithEmailAndPassword(auth, email, password);
 
-document.getElementById("emailLoginBtn").addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  const name = playerNameInput.value.trim();
+      await savePlayer(result.user, name, {
+        forceLobby: true
+      });
 
-  if (!email || !password) {
-    return status("Digite email e senha.");
-  }
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
 
-  try {
-    status("Entrando...");
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    await savePlayer(result.user, name);
-  } catch (error) {
-    console.error(error);
-    status("Erro ao entrar. Confira email e senha.");
-  }
-});
+      if (error.code === "auth/email-already-in-use") {
+        status("Esse email já está cadastrado. Tente entrar em vez de criar conta.");
+      } else if (error.code === "auth/weak-password") {
+        status("A senha precisa ter no mínimo 6 caracteres.");
+      } else {
+        status("Erro ao cadastrar. Confira os dados e tente novamente.");
+      }
+    }
+  });
+}
 
-document.getElementById("guestLoginBtn").addEventListener("click", async () => {
-  const name = guestNameInput.value.trim();
+const emailLoginBtn = document.getElementById("emailLoginBtn");
+if (emailLoginBtn) {
+  emailLoginBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-  if (!name) {
-    return status("Digite um nome para entrar sem conta.");
-  }
+    if (!email || !password) {
+      return status("Digite o seu email e senha para entrar.");
+    }
 
-  try {
-    status("Entrando sem conta...");
-    const result = await signInAnonymously(auth);
-    await savePlayer(result.user, name);
-  } catch (error) {
-    console.error(error);
-    status("Erro. Confira se login Anônimo está ativado no Firebase.");
-  }
-});
+    try {
+      status("Entrando...");
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      await savePlayer(result.user);
+
+    } catch (error) {
+      console.error("Erro ao entrar:", error);
+      status("Erro ao entrar. Confira seu email e senha.");
+    }
+  });
+}
+
+const guestLoginBtn = document.getElementById("guestLoginBtn");
+if (guestLoginBtn) {
+  guestLoginBtn.addEventListener("click", async () => {
+    const name = guestNameInput.value.trim();
+
+    if (!name) {
+      return status("Digite um nome para a Entrada Rápida.");
+    }
+
+    try {
+      status("Entrando no modo rápido...");
+      const result = await signInAnonymously(auth);
+
+      await savePlayer(result.user, name, {
+        forceLobby: true
+      });
+
+    } catch (error) {
+      console.error("Erro na entrada rápida:", error);
+      status("Erro ao realizar a entrada rápida.");
+    }
+  });
+}

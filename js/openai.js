@@ -1,12 +1,12 @@
 const GEMINI_API_KEY =
-  "AIzaSyA4X2XLWoQvjX-49B0JkXkzp1kpPwZKRlE";
+  "AIzaSyBJa5hjkM44wtHG6LDozpl1q49V0Ap2UK8";
 
 export async function askAI(prompt) {
 
   try {
 
     const url =
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
 
     const response = await fetch(url, {
 
