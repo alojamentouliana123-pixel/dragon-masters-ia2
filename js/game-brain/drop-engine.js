@@ -1,5 +1,5 @@
-import POTIONS from "../../assets/data/potion.json" assert { type: "json" };
-import MONSTERS_DATA from "../../assets/data/monstros_com_loot.json" assert { type: "json" };
+import POTIONS from "../../assets/data/potion.json" let POTIONS = [];
+import MONSTERS_DATA from "../../assets/data/monstros_com_loot.json"let MONSTERS_DATA = [];
 
 function roll(chance = 0) {
   return Math.random() * 100 < Number(chance || 0);
