@@ -1,3 +1,16 @@
+let POTIONS = [];
+let MONSTERS_DATA = [];
+
+async function carregarDados() {
+    POTIONS = await fetch('../../assets/data/potions.json')
+        .then(r => r.json());
+
+    MONSTERS_DATA = await fetch('../../assets/data/monstros_com_loot.json')
+        .then(r => r.json());
+}
+
+await carregarDados();
+
 async function carregarDados() {
     POTIONS = await fetch('../../assets/data/potion.json')
         .then(r => r.json());
