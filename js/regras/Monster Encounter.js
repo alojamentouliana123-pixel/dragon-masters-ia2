@@ -9,9 +9,11 @@
 // /data/monstros_5000.json
 // /data/eldrakar_items_1200.json
 
-import monstersData from "../../assets/data/monstros_5000.json" assert { type: "json" };
+const monstersData = await fetch("../../assets/data/monstros_5000.json")
+  .then(r => r.json());
 
-import itemsData from "../../assets/data/eldrakar_items_1200.json" assert { type: "json" };
+const itemsData = await fetch("../../assets/data/eldrakar_items_1200.json")
+  .then(r => r.json());
 
 // =====================================================
 // CONFIGURAÇÃO GERAL
