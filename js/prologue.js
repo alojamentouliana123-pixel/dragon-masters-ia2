@@ -42,17 +42,6 @@ async function falarNarrativaIA(texto) {
 
   speechSynthesis.speak(fala);
 }
-
-    const blob = await response.blob();
-    const audioUrl = URL.createObjectURL(blob);
-    const audio = new Audio(audioUrl);
-
-    audio.play();
-
-  } catch (error) {
-    console.error("Erro ao tocar voz:", error);
-  }
-}
 async function typeText(text) {
   if (!storyText) return;
 
