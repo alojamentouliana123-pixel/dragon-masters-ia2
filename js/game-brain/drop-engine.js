@@ -1,5 +1,12 @@
-import POTIONS from "../../assets/data/potion.json" let POTIONS = [];
-import MONSTERS_DATA from "../../assets/data/monstros_com_loot.json"let MONSTERS_DATA = [];
+async function carregarDados() {
+    POTIONS = await fetch('./assets/data/potions.json')
+        .then(r => r.json());
+
+    MONSTERS_DATA = await fetch('./assets/data/monstros_com_loot.json')
+        .then(r => r.json());
+}
+
+await carregarDados();
 
 function roll(chance = 0) {
   return Math.random() * 100 < Number(chance || 0);
