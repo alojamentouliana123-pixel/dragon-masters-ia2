@@ -16,54 +16,39 @@ const prologueState = {
   location: "Pântano Sombrio",
 
   scene: `
-
+Você desperta sozinho
+em um pântano escuro.
 
 A CHUVA cai lentamente.
+
+O cheiro de lama
+e podridão invade o ar.
+
 Algo observa você
 na escuridão.
 `
 };
 
 function typeText(text) {
-    storyText.innerHTML = text;
-}
+  if (!storyText) return Promise.resolve();
+
   isTyping = true;
-  storyText.innerHTML = "";
 
-  const lines = String(text || "")
-    .split("\n")
-    .map(l => l.trim())
-    .filter(Boolean);
+  storyText.classList.remove("story-fade-in");
+  storyText.style.opacity = "0";
 
-  for (const line of lines) {
-    detectEffects(line);
-    const el = document.createElement("div");
-    el.className = "story-line show";
-    storyText.appendChild(el);
+  setTimeout(() => {
+    storyText.innerHTML = String(text || "").replace(/\n/g, "<br>");
+    storyText.classList.add("story-fade-in");
+    storyText.style.opacity = "1";
+    isTyping = false;
+  }, 200);
 
-    let typed = "";
-
-    for (const char of line) {
-      typed += char;
-      el.textContent = typed + "▌";
-      await new Promise(r => setTimeout(r, 45));
-    }
-
-    el.textContent = typed;
-
-    await new Promise(r => setTimeout(r, 4200));
-
-    el.classList.add("hide");
-
-    await new Promise(r => setTimeout(r, 1200));
-
-    el.remove();
-  }
-
-  isTyping = false;
+  return Promise.resolve();
 }
 
 function detectEffects(text) {
+
   const upper = String(text || "").toUpperCase();
 
   if (cinematicFX) {
