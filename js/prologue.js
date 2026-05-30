@@ -1,6 +1,9 @@
 import { askAI } from "./openai.js";
 import { GameBrain } from "./game-brain.js";
 import GlobalUI from "./global-ui.js";
+import { CinematicParticles } from "./regras/cinematic-effects.js";
+
+let cinematicFX = null;
 
 const storyText = document.getElementById("storyText");
 const playerInput = document.getElementById("playerInput");
@@ -27,47 +30,71 @@ na escuridão.
 };
 
 async function typeText(text) {
-  if (!storyText || isTyping) return;
+  if (!storyText) return;
 
   isTyping = true;
   storyText.innerHTML = "";
 
-  const safeText = String(text || "");
-  let currentText = "";
-  let i = 0;
+  const lines = String(text || "")
+    .split("\n")
+    .map(l => l.trim())
+    .filter(Boolean);
 
-  return new Promise(resolve => {
-    const interval = setInterval(() => {
-      if (i < safeText.length) {
-        currentText += safeText[i];
-        storyText.innerHTML = currentText.replace(/\n/g, "<br>");
-        i++;
-      } else {
-        clearInterval(interval);
-        isTyping = false;
-        resolve();
-      }
-    }, 18);
-  });
+  for (const line of lines) {
+    detectEffects(line);
+    const el = document.createElement("div");
+    el.className = "story-line show";
+    storyText.appendChild(el);
+
+    let typed = "";
+
+    for (const char of line) {
+      typed += char;
+      el.textContent = typed + "▌";
+      await new Promise(r => setTimeout(r, 45));
+    }
+
+    el.textContent = typed;
+
+    await new Promise(r => setTimeout(r, 4200));
+
+    el.classList.add("hide");
+
+    await new Promise(r => setTimeout(r, 1200));
+
+    el.remove();
+  }
+
+  isTyping = false;
 }
 
 function detectEffects(text) {
   const upper = String(text || "").toUpperCase();
-  const layer = document.getElementById("cinematicLayer");
 
-  if (!layer) return;
+  if (cinematicFX) {
+    cinematicFX.destroy();
+    cinematicFX = null;
+  }
+
+  cinematicFX = new CinematicParticles();
 
   if (upper.includes("CHUVA")) {
-    layer.className = "fx-prologue fx-rain";
-  } else if (upper.includes("NÉVOA") || upper.includes("NEVOA")) {
-    layer.className = "fx-prologue fx-fog";
-  } else if (upper.includes("FOGO") || upper.includes("CHAMAS")) {
-    layer.className = "fx-prologue fx-fire";
-  } else if (upper.includes("ESCURIDÃO") || upper.includes("ESCURO")) {
-    layer.className = "fx-prologue fx-darkness";
-  } else {
-    layer.className = "";
+    cinematicFX.rain(380);
+    return;
   }
+
+  if (upper.includes("NÉVOA") || upper.includes("NEVOA")) {
+    cinematicFX.fog(40);
+    return;
+  }
+
+  if (upper.includes("ESCURO") || upper.includes("ESCURIDÃO")) {
+    cinematicFX.fog(25);
+    return;
+  }
+
+  cinematicFX.destroy();
+  cinematicFX = null;
 }
 
 function getCurrentMonster() {

@@ -387,4 +387,44 @@ body {
   .btn-dinamico-rpg {
     width: 100%;
   }
+}.cinematic-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.45;
+}.story-line {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 900ms ease,
+    transform 900ms ease;
+  margin-bottom: 18px;
+}
+
+.story-line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.story-line.hide {
+  opacity: 0;
+  transform: translateY(-12px);
+}.story-line {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 900ms ease,
+    transform 900ms ease;
+  margin-bottom: 18px;
+}
+
+.story-line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.story-line.hide {
+  opacity: 0;
+  transform: translateY(-12px);
 }
