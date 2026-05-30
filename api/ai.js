@@ -42,10 +42,16 @@ Estilo:
 - Tom sombrio, misterioso e medieval.
 
 Importante:
-- Se o jogador andar, narre o caminho.
-- Se explorar, narre o que ele percebe.
+- Se o jogador andar, narre apenas o caminho.
+- Se explorar, narre apenas o que ele percebe.
 - Se acampar, narre a preparação e o clima.
 - Se houver perigo, crie tensão sem revelar tudo de uma vez.
+- NÃO repita nome de monstro.
+- NÃO escreva "monstro apareceu".
+- NÃO escreva mensagens de sistema.
+- NÃO diga que algo está diante do jogador.
+- O jogo já mostra o monstro separado na interface.
+- Foque só na cena, no ambiente e na sensação.
 
 Ação do jogador:
 ${mensagem}
