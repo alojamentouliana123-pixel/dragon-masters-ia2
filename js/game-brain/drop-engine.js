@@ -2,22 +2,21 @@ let POTIONS = [];
 let MONSTERS_DATA = [];
 
 async function carregarDados() {
-    POTIONS = await fetch('../../assets/data/potions.json')
-        .then(r => r.json());
+  const potionsResponse = await fetch("../../assets/data/potions.json");
+  POTIONS = await potionsResponse.json();
 
-    MONSTERS_DATA = await fetch('../../assets/data/monstros_com_loot.json')
-        .then(r => r.json());
+  const monstersResponse = await fetch("../../assets/data/monstros_com_loot.json");
+  MONSTERS_DATA = await monstersResponse.json();
 }
 
 await carregarDados();
-
 
 function roll(chance = 0) {
   return Math.random() * 100 < Number(chance || 0);
 }
 
 function randomItem(list = []) {
-  if (!list.length) return null;
+  if (!Array.isArray(list) || list.length === 0) return null;
   return structuredClone(list[Math.floor(Math.random() * list.length)]);
 }
 
@@ -26,21 +25,23 @@ function getTierNumber(tier = "T1") {
   return found ? Number(found[0]) : 1;
 }
 
-function getMonsterData(monster) {
+function getMonsterData(monster = {}) {
   const monsters = MONSTERS_DATA.monstros || MONSTERS_DATA;
+  if (!Array.isArray(monsters)) return monster;
+
   return monsters.find(m => String(m.id) === String(monster.id)) || monster;
 }
 
-function getMonsterTier(monster) {
-  return monster?.tier || "T1";
+function getMonsterTier(monster = {}) {
+  return monster.tier || "T1";
 }
 
-function getMonsterLevel(monster) {
-  return monster?.nivel || monster?.level || 1;
+function getMonsterLevel(monster = {}) {
+  return monster.nivel || monster.level || 1;
 }
 
-function isPotionDrop(item) {
-  const tipo = String(item?.tipo || "").toLowerCase();
+function isPotionDrop(item = {}) {
+  const tipo = String(item.tipo || "").toLowerCase();
 
   return (
     tipo.includes("pocao") ||
@@ -50,8 +51,8 @@ function isPotionDrop(item) {
   );
 }
 
-function isSurvivalPotion(item) {
-  const tipo = String(item?.tipo || "").toLowerCase();
+function isSurvivalPotion(item = {}) {
+  const tipo = String(item.tipo || "").toLowerCase();
 
   return (
     tipo.includes("pocao_hp") ||
@@ -64,8 +65,10 @@ function isSurvivalPotion(item) {
   );
 }
 
-function getPotionsByTier(monsterTier) {
+function getPotionsByTier(monsterTier = "T1") {
   const tierNumber = getTierNumber(monsterTier);
+
+  if (!Array.isArray(POTIONS)) return [];
 
   return POTIONS.filter(item =>
     isSurvivalPotion(item) &&
@@ -73,7 +76,7 @@ function getPotionsByTier(monsterTier) {
   );
 }
 
-function gerarConsumiveisDeSobrevivencia(monster) {
+function gerarConsumiveisDeSobrevivencia(monster = {}) {
   const tier = getMonsterTier(monster);
   const pool = getPotionsByTier(tier);
 
@@ -88,10 +91,12 @@ function gerarConsumiveisDeSobrevivencia(monster) {
   return drops;
 }
 
-function gerarLootNormalDoMonstro(monster) {
+function gerarLootNormalDoMonstro(monster = {}) {
   const data = getMonsterData(monster);
   const lootTable = data.loot || [];
   const drops = [];
+
+  if (!Array.isArray(lootTable)) return drops;
 
   for (const loot of lootTable) {
     if (isPotionDrop(loot)) continue;
@@ -106,7 +111,7 @@ function gerarLootNormalDoMonstro(monster) {
   return drops;
 }
 
-export function gerarGoldDoMonstro(monster) {
+export function gerarGoldDoMonstro(monster = {}) {
   const data = getMonsterData(monster);
 
   const level = getMonsterLevel(data);
@@ -118,7 +123,7 @@ export function gerarGoldDoMonstro(monster) {
   return Math.floor(min + Math.random() * (max - min + 1));
 }
 
-export function gerarDropsDoMonstro(monster) {
+export function gerarDropsDoMonstro(monster = {}) {
   const consumiveis = gerarConsumiveisDeSobrevivencia(monster);
   const lootNormal = gerarLootNormalDoMonstro(monster);
 
