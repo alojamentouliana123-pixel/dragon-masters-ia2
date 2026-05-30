@@ -1,99 +1,26 @@
-const GEMINI_API_KEY =
-  "AIzaSyBJa5hjkM44wtHG6LDozpl1q49V0Ap2UK8";
-
 export async function askAI(prompt) {
-
   try {
-
-    const url =
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-
-    const response = await fetch(url, {
-
+    const response = await fetch("/api/ai", {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json"
       },
-
       body: JSON.stringify({
-
-        contents: [
-          {
-            parts: [
-              {
-                text: `
-Você é um mestre de RPG sombrio e imersivo.
-
-Mundo:
-Eldrakar.
-
-Seu trabalho:
-Narrar ações dos jogadores.
-
-Responda:
-- curto
-- cinematográfico
-- misterioso
-- imersivo
-
-Jogador:
-${prompt}
-`
-              }
-            ]
-          }
-        ]
-
+        mensagem: prompt
       })
-
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-
-      const errorText =
-        await response.text();
-
-      console.error(
-        "Erro Gemini:",
-        errorText
-      );
-
-      return `⚠️ Erro no servidor IA (${response.status})`;
+      console.error("Erro IA:", data);
+      return "O silêncio pesa sobre Eldrakar, como se alguma força impedisse a voz do mestre.";
     }
 
-    const data =
-      await response.json();
-
-    console.log(
-      "Gemini respondeu:",
-      data
-    );
-
-    if (
-      data.candidates &&
-      data.candidates[0] &&
-      data.candidates[0].content &&
-      data.candidates[0].content.parts &&
-      data.candidates[0].content.parts[0]
-    ) {
-
-      return data
-        .candidates[0]
-        .content.parts[0]
-        .text;
-    }
-
-    return "⚠️ O mestre permaneceu em silêncio.";
+    return data.texto || "O mestre permaneceu em silêncio.";
 
   } catch (error) {
-
-    console.error(
-      "Erro crítico:",
-      error
-    );
-
-    return "⚠️ A IA falhou.";
+    console.error("Erro crítico IA:", error);
+    return "A névoa engole as palavras, e por um momento o destino se cala.";
   }
-
 }
