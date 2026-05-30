@@ -1,8 +1,8 @@
 async function carregarDados() {
-    POTIONS = await fetch('./assets/data/potions.json')
+    POTIONS = await fetch('../../assets/data/potions.json')
         .then(r => r.json());
 
-    MONSTERS_DATA = await fetch('./assets/data/monstros_com_loot.json')
+    MONSTERS_DATA = await fetch('../../assets/data/monstros_com_loot.json')
         .then(r => r.json());
 }
 
