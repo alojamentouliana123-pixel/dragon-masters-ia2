@@ -386,7 +386,9 @@ Voltou para exploração.`;
         }
       }
 
-    if (!narrativaFinal) {
+     this.turnoAtual++;
+
+if (!narrativaFinal) {
   narrativaFinal = criarNarrativaSistema({
     action: tipoAcao,
     report: relatorioMecanico,
@@ -397,19 +399,15 @@ Voltou para exploração.`;
   });
 }
 
-      this.turnoAtual++;
+this.scene = narrativaFinal;
 
-    
-      this.scene = narrativaFinal;
+if (this.onNarrativaGerada) {
+  await this.onNarrativaGerada(narrativaFinal);
+}
 
-      if (this.onNarrativaGerada) {
-        await this.onNarrativaGerada(narrativaFinal);
-      }
-
-      if (this.onStatusUpdate) {
-        await this.onStatusUpdate(this.character);
-      }
-
+if (this.onStatusUpdate) {
+  await this.onStatusUpdate(this.character);
+}
     } catch (error) {
       console.error("Erro no GameBrain:", error);
 

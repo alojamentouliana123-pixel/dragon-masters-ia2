@@ -32,17 +32,8 @@ na escuridão.
 function typeText(text) {
   if (!storyText) return Promise.resolve();
 
-  isTyping = true;
-
-  storyText.classList.remove("story-fade-in");
-  storyText.style.opacity = "0";
-
-  setTimeout(() => {
-    storyText.innerHTML = String(text || "").replace(/\n/g, "<br>");
-    storyText.classList.add("story-fade-in");
-    storyText.style.opacity = "1";
-    isTyping = false;
-  }, 200);
+  storyText.innerHTML =
+    String(text || "").replace(/\n/g, "<br>");
 
   return Promise.resolve();
 }
@@ -179,6 +170,11 @@ async function processGameAction(actionData) {
     console.warn("GameBrain não encontrado.");
     return;
   }
+  storyText.innerHTML = `
+<div class="thinking">
+  🕯️ O destino está sendo escrito...
+</div>
+`;
 
   await GameBrain.processarAcaoMecanica(actionData);
 
