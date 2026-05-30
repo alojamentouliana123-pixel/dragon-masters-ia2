@@ -49,7 +49,6 @@ Sombrio, medieval, misterioso e direto.
 Ação do jogador:
 ${mensagem}
 `
-`
                 }
               ]
             }
