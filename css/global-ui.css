@@ -1,0 +1,430 @@
+#eld-global-ui {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f5f5f5;
+}
+
+.hidden,
+.eld-quick-hidden {
+  display: none !important;
+}
+
+.eld-top-hud,
+.eld-quick-panel,
+.eld-action-bar,
+.eld-drawer,
+.eld-toast-box,
+.eld-monster-box {
+  pointer-events: auto;
+}
+
+/* HUD */
+
+.eld-top-hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 140px 1fr 360px 96px;
+  gap: 10px;
+  align-items: center;
+  background: rgba(0,0,0,.78);
+  border-bottom: 1px solid rgba(212,175,55,.45);
+  box-sizing: border-box;
+}
+
+.eld-player-card {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.eld-player-card strong {
+  font-size: 16px;
+}
+
+.eld-player-card span {
+  font-size: 11px;
+  opacity: .75;
+}
+
+.eld-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.eld-bar-line {
+  display: grid;
+  grid-template-columns: 42px 1fr 70px;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.eld-bar-bg {
+  height: 11px;
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.eld-hp-fill,
+.eld-mana-fill,
+.eld-xp-fill {
+  height: 100%;
+  width: 0%;
+}
+
+.eld-hp-fill { background: #c42828; }
+.eld-mana-fill { background: #2f61df; }
+.eld-xp-fill { background: #d4af37; }
+
+.eld-stats-mini {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.eld-hud-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.eld-market-btn,
+.eld-menu-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,.55);
+  background: rgba(0,0,0,.7);
+  color: #f1c84b;
+  font-size: 20px;
+}
+
+/* MENU LATERAL */
+
+.eld-quick-panel {
+  position: fixed;
+  top: 96px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eld-quick-panel button {
+  width: 142px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.75);
+  color: white;
+  font-size: 13px;
+  text-align: left;
+}
+
+/* DRAWER */
+
+.eld-drawer {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 82vw;
+  height: 78vh;
+  max-width: 1050px;
+  background: rgba(10,10,10,.96);
+  border: 1px solid rgba(212,175,55,.55);
+  border-radius: 16px;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+.eld-drawer-head {
+  height: 44px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.eld-drawer-head button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,.12);
+  color: white;
+}
+
+.eld-drawer-content {
+  padding: 12px;
+  height: calc(78vh - 44px);
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+/* CARDS */
+
+.eld-card {
+  padding: 12px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+}
+
+.eld-card h3 {
+  margin: 0 0 8px;
+}
+
+.eld-card p {
+  margin: 0 0 8px;
+}
+
+/* INVENTÁRIO */
+
+.eld-inventory-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.eld-equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 76px);
+  gap: 10px;
+}
+
+.eld-bag-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 66px);
+  gap: 8px;
+}
+
+.eld-equip-slot,
+.eld-bag-slot {
+  width: 66px;
+  height: 66px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.eld-equip-slot {
+  width: 76px;
+  height: 76px;
+}
+
+.eld-item-img,
+.eld-equip-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.eld-bag-slot.empty {
+  opacity: .35;
+}
+
+/* MONSTRO */
+
+.eld-monster-box {
+  position: fixed;
+  top: 96px;
+  left: 12px;
+  width: 220px;
+  padding: 10px;
+  background: rgba(0,0,0,.82);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  z-index: 10000;
+}
+
+.eld-monster-box.hidden {
+  display: none !important;
+}
+
+.eld-monster-box strong,
+.eld-monster-box small,
+.eld-monster-box span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ACTION BAR */
+
+.eld-action-bar {
+  position: fixed;
+  left:50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  height: 70px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  background: rgba(0,0,0,.82);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+}
+
+.eld-action-bar button {
+  width: 76px;
+  height: 54px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,.08);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.eld-action-bar button span {
+  font-size: 13px;
+}
+
+/* CHAT / TOAST */
+
+.eld-toast-box {
+  position: fixed;
+  left: 50%;
+  bottom: 105px;
+  transform: translateX(-50%);
+}
+
+.eld-toast {
+  padding: 10px 14px;
+  background: rgba(0,0,0,.88);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 12px;
+}
+
+.eld-chat-messages {
+  height: 220px;
+  overflow-y: auto;
+}
+
+.eld-chat-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.eld-chat-input input {
+  flex: 1;
+  padding: 10px;
+  background: #111;
+  color: white;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+  .eld-top-hud {
+    grid-template-columns: 110px 1fr 48px;
+    height: 90px;
+  }
+
+  .eld-stats-mini {
+    display: none;
+  }
+
+  .eld-drawer {
+    width: 96vw;
+    height: 84vh;
+  }
+
+  .eld-bag-grid {
+    grid-template-columns: repeat(4, 62px);
+  }
+}
+
+.eld-character-doll {
+  width: 76px;
+  height: 76px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.05);
+  border: 1px dashed rgba(255,255,255,.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  opacity: .75;
+}.eld-trash-zone {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px dashed rgba(255,80,80,.6);
+  border-radius: 12px;
+  text-align: center;
+  color: #ff8a8a;
+  background: rgba(80,0,0,.25);
+}
+
+.eld-trash-zone.drag-over {
+  background: rgba(180,0,0,.45);
+  border-color: #ff4444;
+}
+.eld-equip-slot.drag-over {
+  border-color: #d4af37 !important;
+  box-shadow: 0 0 10px rgba(212,175,55,.8);
+}#eldItemMenu {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.45);
+}
+
+.eld-item-menu-box {
+  width: 260px;
+  background: #111;
+  border: 1px solid #c89b3c;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+  box-shadow: 0 0 20px #000;
+}
+
+.eld-item-menu-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.eld-item-menu-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.eld-item-menu-actions button {
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
